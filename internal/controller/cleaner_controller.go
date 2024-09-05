@@ -121,7 +121,6 @@ func (r *CleanerReconciler) doFinalizerOperationsForMemcached(cr *argocd.Applica
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.17.3/pkg/reconcile
 func (r *CleanerReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	log := log.FromContext(ctx)
-	log.Info("")
 	argocdApp := &argocd.Application{}
 	err := r.Get(ctx, req.NamespacedName, argocdApp)
 	if err != nil {
@@ -141,17 +140,17 @@ func (r *CleanerReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 	// Let's add a finalizer. Then, we can define some operations which should
 	// occur before the custom resource is deleted.
 	// More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/finalizers
-	if !controllerutil.ContainsFinalizer(argocdApp, openreplayFinalizer) && !isMemcachedMarkedToBeDeleted {
-		if ok := controllerutil.AddFinalizer(argocdApp, openreplayFinalizer); !ok {
-			log.Error(err, "Failed to add finalizer into the custom resource")
-			return ctrl.Result{Requeue: true}, nil
-		}
-
-		if err = r.Update(ctx, argocdApp); err != nil {
-			log.Error(err, "Failed to update custom resource to add finalizer")
-			return ctrl.Result{}, err
-		}
-	}
+	// if !controllerutil.ContainsFinalizer(argocdApp, openreplayFinalizer) && !isMemcachedMarkedToBeDeleted {
+	// 	if ok := controllerutil.AddFinalizer(argocdApp, openreplayFinalizer); !ok {
+	// 		log.Error(err, "Failed to add finalizer into the custom resource")
+	// 		return ctrl.Result{Requeue: true}, nil
+	// 	}
+	//
+	// 	if err = r.Update(ctx, argocdApp); err != nil {
+	// 		log.Error(err, "Failed to update custom resource to add finalizer")
+	// 		return ctrl.Result{}, err
+	// 	}
+	// }
 
 	// Check if the Memcached instance is marked to be deleted, which is
 	// indicated by the deletion timestamp being set.
