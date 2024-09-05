@@ -121,7 +121,7 @@ func (r *CleanerReconciler) doFinalizerOperationsForMemcached(cr *argocd.Applica
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.17.3/pkg/reconcile
 func (r *CleanerReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	log := log.FromContext(ctx)
-	log.Info("where are you")
+	log.Info("")
 	argocdApp := &argocd.Application{}
 	err := r.Get(ctx, req.NamespacedName, argocdApp)
 	if err != nil {
