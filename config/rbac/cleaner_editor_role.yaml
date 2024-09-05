@@ -1,0 +1,27 @@
+# permissions for end users to edit cleaners.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/name: argofin
+    app.kubernetes.io/managed-by: kustomize
+  name: cleaner-editor-role
+rules:
+- apiGroups:
+  - cleaner.openreplay.com
+  resources:
+  - cleaners
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - cleaner.openreplay.com
+  resources:
+  - cleaners/status
+  verbs:
+  - get
