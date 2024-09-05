@@ -1,9 +1,0 @@
-apiVersion: cleaner.openreplay.com/v1alpha1
-kind: Cleaner
-metadata:
-  labels:
-    app.kubernetes.io/name: argofin
-    app.kubernetes.io/managed-by: kustomize
-  name: cleaner-sample
-spec:
-  # TODO(user): Add fields here

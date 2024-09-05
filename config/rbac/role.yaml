@@ -7,7 +7,7 @@ rules:
 - apiGroups:
   - argoproj.io
   resources:
-  - cleaners
+  - applications
   verbs:
   - create
   - delete
@@ -19,13 +19,13 @@ rules:
 - apiGroups:
   - argoproj.io
   resources:
-  - cleaners/finalizers
+  - applications/finalizers
   verbs:
   - update
 - apiGroups:
   - argoproj.io
   resources:
-  - cleaners/status
+  - applications/status
   verbs:
   - get
   - patch

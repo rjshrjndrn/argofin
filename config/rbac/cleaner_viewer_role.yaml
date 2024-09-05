@@ -1,4 +1,4 @@
-# permissions for end users to view cleaners.
+# permissions for end users to view applications.
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
@@ -8,16 +8,16 @@ metadata:
   name: cleaner-viewer-role
 rules:
 - apiGroups:
-  - cleaner.openreplay.com
+  - argoproj.io
   resources:
-  - cleaners
+  - applications
   verbs:
   - get
   - list
   - watch
 - apiGroups:
-  - cleaner.openreplay.com
+  - argoproj.io
   resources:
-  - cleaners/status
+  - applications/status
   verbs:
   - get
