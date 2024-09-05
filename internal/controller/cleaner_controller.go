@@ -142,7 +142,6 @@ func (r *CleanerReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 	// occur before the custom resource is deleted.
 	// More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/finalizers
 	if !controllerutil.ContainsFinalizer(argocdApp, openreplayFinalizer) && !isMemcachedMarkedToBeDeleted {
-		log.Info("Adding Finalizer for Memcached")
 		if ok := controllerutil.AddFinalizer(argocdApp, openreplayFinalizer); !ok {
 			log.Error(err, "Failed to add finalizer into the custom resource")
 			return ctrl.Result{Requeue: true}, nil
