@@ -23,7 +23,6 @@ import (
 	argocd "github.com/argoproj/argo-cd/v2/pkg/apis/application/v1alpha1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/client-go/tools/record"
-	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -155,48 +154,50 @@ func (r *CleanerReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 	// Check if the Memcached instance is marked to be deleted, which is
 	// indicated by the deletion timestamp being set.
 	if isMemcachedMarkedToBeDeleted {
-		if controllerutil.ContainsFinalizer(argocdApp, openreplayFinalizer) {
-			log.Info("Performing Finalizer Operations for Memcached before delete CR")
+		log.Info("Deleting.")
+		// Delete all regardless of finalizer
+		// if controllerutil.ContainsFinalizer(argocdApp, openreplayFinalizer) {
+		log.Info("Performing Finalizer Operations for Memcached before delete CR")
 
-			// if err := r.Status().Update(ctx, argocdApp); err != nil {
-			// 	log.Error(err, "Failed to update Memcached status")
-			// 	return ctrl.Result{}, err
-			// }
+		// if err := r.Status().Update(ctx, argocdApp); err != nil {
+		// 	log.Error(err, "Failed to update Memcached status")
+		// 	return ctrl.Result{}, err
+		// }
 
-			// Perform all operations required before removing the finalizer and allow
-			// the Kubernetes API to remove the custom resource.
-			// r.doFinalizerOperationsForMemcached(argocdApp)
+		// Perform all operations required before removing the finalizer and allow
+		// the Kubernetes API to remove the custom resource.
+		// r.doFinalizerOperationsForMemcached(argocdApp)
 
-			// TODO(user): If you add operations to the doFinalizerOperationsForMemcached method
-			// then you need to ensure that all worked fine before deleting and updating the Downgrade status
-			// otherwise, you should requeue here.
+		// TODO(user): If you add operations to the doFinalizerOperationsForMemcached method
+		// then you need to ensure that all worked fine before deleting and updating the Downgrade status
+		// otherwise, you should requeue here.
 
-			// Re-fetch the memcached Custom Resource before updating the status
-			// so that we have the latest state of the resource on the cluster and we will avoid
-			// raising the error "the object has been modified, please apply
-			// your changes to the latest version and try again" which would re-trigger the reconciliation
-			if err := r.Get(ctx, req.NamespacedName, argocdApp); err != nil {
-				log.Error(err, "Failed to re-fetch memcached")
-				return ctrl.Result{}, err
-			}
-
-			// if err := r.Status().Update(ctx, argocdApp); err != nil {
-			// 	log.Error(err, "Failed to update Memcached status")
-			// 	return ctrl.Result{}, err
-			// }
-			//
-			log.Info("Removing Finalizer for Memcached after successfully perform the operations")
-			argocdApp.SetFinalizers([]string{})
-			// if err := r.Client.Update(context.TODO(), argocdApp); err != nil {
-			// 	fmt.Printf("Failed to remove finalizer from Argo ApplicationSet %s: %v", argocdApp.Name, err)
-			// 	return ctrl.Result{Requeue: true}, nil
-			// }
-
-			if err := r.Update(ctx, argocdApp); err != nil {
-				log.Error(err, "Failed to remove finalizer for Memcached")
-				return ctrl.Result{}, err
-			}
+		// Re-fetch the memcached Custom Resource before updating the status
+		// so that we have the latest state of the resource on the cluster and we will avoid
+		// raising the error "the object has been modified, please apply
+		// your changes to the latest version and try again" which would re-trigger the reconciliation
+		if err := r.Get(ctx, req.NamespacedName, argocdApp); err != nil {
+			log.Error(err, "Failed to re-fetch memcached")
+			return ctrl.Result{}, err
 		}
+
+		// if err := r.Status().Update(ctx, argocdApp); err != nil {
+		// 	log.Error(err, "Failed to update Memcached status")
+		// 	return ctrl.Result{}, err
+		// }
+		//
+		log.Info("Removing Finalizer for Argo after successfully perform the operations")
+		argocdApp.SetFinalizers([]string{})
+		// if err := r.Client.Update(context.TODO(), argocdApp); err != nil {
+		// 	fmt.Printf("Failed to remove finalizer from Argo ApplicationSet %s: %v", argocdApp.Name, err)
+		// 	return ctrl.Result{Requeue: true}, nil
+		// }
+
+		if err := r.Update(ctx, argocdApp); err != nil {
+			log.Error(err, "Failed to remove finalizer for Memcached")
+			return ctrl.Result{}, err
+		}
+		// }
 		return ctrl.Result{}, nil
 	}
 
