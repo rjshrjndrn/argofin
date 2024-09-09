@@ -6,8 +6,10 @@ metadata:
 rules:
 - apiGroups:
   - argoproj.io
+  - corev1
   resources:
   - applications
+  - secrets
   verbs:
   - create
   - delete
@@ -18,14 +20,18 @@ rules:
   - watch
 - apiGroups:
   - argoproj.io
+  - corev1
   resources:
   - applications/finalizers
+  - secrets/finalizers
   verbs:
   - update
 - apiGroups:
   - argoproj.io
+  - corev1
   resources:
   - applications/status
+  - secrets/status
   verbs:
   - get
   - patch

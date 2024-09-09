@@ -9,8 +9,10 @@ metadata:
 rules:
 - apiGroups:
   - argoproj.io
+  - corev1
   resources:
   - applications
+  - secrets
   verbs:
   - get
   - list
