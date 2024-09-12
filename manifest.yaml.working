@@ -5,7 +5,7 @@ items:
   metadata:
     annotations:
       kubectl.kubernetes.io/last-applied-configuration: |
-        {"apiVersion":"v1","kind":"Namespace","metadata":{"annotations":{},"creationTimestamp":"2024-09-05T12:48:20Z","labels":{"app.kubernetes.io/managed-by":"kustomize","app.kubernetes.io/name":"argofin","control-plane":"controller-manager","kubernetes.io/metadata.name":"argofin-system"},"name":"argofin-system","resourceVersion":"516","uid":"5ce75199-1702-49be-98f8-a5e1cb71a3ad"},"spec":{"finalizers":["kubernetes"]},"status":{"phase":"Active"}}
+        {"apiVersion":"v1","kind":"Namespace","metadata":{"annotations":{},"labels":{"app.kubernetes.io/managed-by":"kustomize","app.kubernetes.io/name":"argofin","control-plane":"controller-manager"},"name":"argofin-system"}}
     creationTimestamp: "2024-09-05T12:48:20Z"
     labels:
       app.kubernetes.io/managed-by: kustomize
@@ -13,7 +13,7 @@ items:
       control-plane: controller-manager
       kubernetes.io/metadata.name: argofin-system
     name: argofin-system
-    resourceVersion: "3336"
+    resourceVersion: "516"
     uid: 5ce75199-1702-49be-98f8-a5e1cb71a3ad
   spec:
     finalizers:
@@ -25,28 +25,28 @@ items:
   metadata:
     annotations:
       kubectl.kubernetes.io/last-applied-configuration: |
-        {"apiVersion":"v1","kind":"ServiceAccount","metadata":{"annotations":{},"creationTimestamp":"2024-09-05T12:48:20Z","labels":{"app.kubernetes.io/managed-by":"kustomize","app.kubernetes.io/name":"argofin"},"name":"argofin-controller-manager","namespace":"argofin-system","resourceVersion":"519","uid":"fbc6ac28-48a2-4621-bfd7-2573f2ce0800"}}
+        {"apiVersion":"v1","kind":"ServiceAccount","metadata":{"annotations":{},"labels":{"app.kubernetes.io/managed-by":"kustomize","app.kubernetes.io/name":"argofin"},"name":"argofin-controller-manager","namespace":"argofin-system"}}
     creationTimestamp: "2024-09-05T12:48:20Z"
     labels:
       app.kubernetes.io/managed-by: kustomize
       app.kubernetes.io/name: argofin
     name: argofin-controller-manager
     namespace: argofin-system
-    resourceVersion: "3337"
+    resourceVersion: "519"
     uid: fbc6ac28-48a2-4621-bfd7-2573f2ce0800
 - apiVersion: rbac.authorization.k8s.io/v1
   kind: Role
   metadata:
     annotations:
       kubectl.kubernetes.io/last-applied-configuration: |
-        {"apiVersion":"rbac.authorization.k8s.io/v1","kind":"Role","metadata":{"annotations":{},"creationTimestamp":"2024-09-05T12:48:20Z","labels":{"app.kubernetes.io/managed-by":"kustomize","app.kubernetes.io/name":"argofin"},"name":"argofin-leader-election-role","namespace":"argofin-system","resourceVersion":"520","uid":"2b332897-9be6-46e2-9c0a-f6f72d4a260f"},"rules":[{"apiGroups":[""],"resources":["configmaps"],"verbs":["get","list","watch","create","update","patch","delete"]},{"apiGroups":["coordination.k8s.io"],"resources":["leases"],"verbs":["get","list","watch","create","update","patch","delete"]},{"apiGroups":[""],"resources":["events"],"verbs":["create","patch"]}]}
+        {"apiVersion":"rbac.authorization.k8s.io/v1","kind":"Role","metadata":{"annotations":{},"labels":{"app.kubernetes.io/managed-by":"kustomize","app.kubernetes.io/name":"argofin"},"name":"argofin-leader-election-role","namespace":"argofin-system"},"rules":[{"apiGroups":[""],"resources":["configmaps"],"verbs":["get","list","watch","create","update","patch","delete"]},{"apiGroups":["coordination.k8s.io"],"resources":["leases"],"verbs":["get","list","watch","create","update","patch","delete"]},{"apiGroups":[""],"resources":["events"],"verbs":["create","patch"]}]}
     creationTimestamp: "2024-09-05T12:48:20Z"
     labels:
       app.kubernetes.io/managed-by: kustomize
       app.kubernetes.io/name: argofin
     name: argofin-leader-election-role
     namespace: argofin-system
-    resourceVersion: "3338"
+    resourceVersion: "520"
     uid: 2b332897-9be6-46e2-9c0a-f6f72d4a260f
   rules:
   - apiGroups:
@@ -85,13 +85,13 @@ items:
   metadata:
     annotations:
       kubectl.kubernetes.io/last-applied-configuration: |
-        {"apiVersion":"rbac.authorization.k8s.io/v1","kind":"ClusterRole","metadata":{"annotations":{},"creationTimestamp":"2024-09-05T12:48:20Z","labels":{"app.kubernetes.io/managed-by":"kustomize","app.kubernetes.io/name":"argofin"},"name":"argofin-cleaner-editor-role","resourceVersion":"2049","uid":"20d33be2-fb9a-4b42-89e0-a69c61437011"},"rules":[{"apiGroups":["argoproj.io"],"resources":["applications"],"verbs":["create","delete","get","list","patch","update","watch"]},{"apiGroups":["argoproj.io"],"resources":["applications/status"],"verbs":["get"]}]}
+        {"apiVersion":"rbac.authorization.k8s.io/v1","kind":"ClusterRole","metadata":{"annotations":{},"labels":{"app.kubernetes.io/managed-by":"kustomize","app.kubernetes.io/name":"argofin"},"name":"argofin-cleaner-editor-role"},"rules":[{"apiGroups":["argoproj.io"],"resources":["applications"],"verbs":["create","delete","get","list","patch","update","watch"]},{"apiGroups":["argoproj.io"],"resources":["applications/status"],"verbs":["get"]}]}
     creationTimestamp: "2024-09-05T12:48:20Z"
     labels:
       app.kubernetes.io/managed-by: kustomize
       app.kubernetes.io/name: argofin
     name: argofin-cleaner-editor-role
-    resourceVersion: "3339"
+    resourceVersion: "2049"
     uid: 20d33be2-fb9a-4b42-89e0-a69c61437011
   rules:
   - apiGroups:
@@ -117,13 +117,13 @@ items:
   metadata:
     annotations:
       kubectl.kubernetes.io/last-applied-configuration: |
-        {"apiVersion":"rbac.authorization.k8s.io/v1","kind":"ClusterRole","metadata":{"annotations":{},"creationTimestamp":"2024-09-05T12:48:20Z","labels":{"app.kubernetes.io/managed-by":"kustomize","app.kubernetes.io/name":"argofin"},"name":"argofin-cleaner-viewer-role","resourceVersion":"2050","uid":"e586a77c-4a77-4bcc-a356-9c8cc0f17f71"},"rules":[{"apiGroups":["argoproj.io"],"resources":["applications"],"verbs":["get","list","watch"]},{"apiGroups":["argoproj.io"],"resources":["applications/status"],"verbs":["get"]}]}
+        {"apiVersion":"rbac.authorization.k8s.io/v1","kind":"ClusterRole","metadata":{"annotations":{},"labels":{"app.kubernetes.io/managed-by":"kustomize","app.kubernetes.io/name":"argofin"},"name":"argofin-cleaner-viewer-role"},"rules":[{"apiGroups":["argoproj.io"],"resources":["applications"],"verbs":["get","list","watch"]},{"apiGroups":["argoproj.io"],"resources":["applications/status"],"verbs":["get"]}]}
     creationTimestamp: "2024-09-05T12:48:20Z"
     labels:
       app.kubernetes.io/managed-by: kustomize
       app.kubernetes.io/name: argofin
     name: argofin-cleaner-viewer-role
-    resourceVersion: "3340"
+    resourceVersion: "2050"
     uid: e586a77c-4a77-4bcc-a356-9c8cc0f17f71
   rules:
   - apiGroups:
@@ -145,10 +145,10 @@ items:
   metadata:
     annotations:
       kubectl.kubernetes.io/last-applied-configuration: |
-        {"apiVersion":"rbac.authorization.k8s.io/v1","kind":"ClusterRole","metadata":{"annotations":{},"creationTimestamp":"2024-09-05T12:48:20Z","name":"argofin-manager-role","resourceVersion":"523","uid":"afe8ad2f-3655-44a8-b175-5327120d7b75"},"rules":[{"apiGroups":["argoproj.io"],"resources":["applications"],"verbs":["create","delete","get","list","patch","update","watch"]},{"apiGroups":["argoproj.io"],"resources":["applications/finalizers"],"verbs":["update"]},{"apiGroups":["argoproj.io"],"resources":["applications/status"],"verbs":["get","patch","update"]}]}
+        {"apiVersion":"rbac.authorization.k8s.io/v1","kind":"ClusterRole","metadata":{"annotations":{},"name":"argofin-manager-role"},"rules":[{"apiGroups":["argoproj.io"],"resources":["applications"],"verbs":["create","delete","get","list","patch","update","watch"]},{"apiGroups":["argoproj.io"],"resources":["applications/finalizers"],"verbs":["update"]},{"apiGroups":["argoproj.io"],"resources":["applications/status"],"verbs":["get","patch","update"]}]}
     creationTimestamp: "2024-09-05T12:48:20Z"
     name: argofin-manager-role
-    resourceVersion: "3341"
+    resourceVersion: "523"
     uid: afe8ad2f-3655-44a8-b175-5327120d7b75
   rules:
   - apiGroups:
@@ -182,13 +182,13 @@ items:
   metadata:
     annotations:
       kubectl.kubernetes.io/last-applied-configuration: |
-        {"apiVersion":"rbac.authorization.k8s.io/v1","kind":"ClusterRole","metadata":{"annotations":{},"creationTimestamp":"2024-09-05T12:48:20Z","labels":{"app.kubernetes.io/managed-by":"kustomize","app.kubernetes.io/name":"argofin"},"name":"argofin-metrics-reader","resourceVersion":"524","uid":"558fd862-b167-47a9-afb7-ab2db618d7a3"},"rules":[{"nonResourceURLs":["/metrics"],"verbs":["get"]}]}
+        {"apiVersion":"rbac.authorization.k8s.io/v1","kind":"ClusterRole","metadata":{"annotations":{},"labels":{"app.kubernetes.io/managed-by":"kustomize","app.kubernetes.io/name":"argofin"},"name":"argofin-metrics-reader"},"rules":[{"nonResourceURLs":["/metrics"],"verbs":["get"]}]}
     creationTimestamp: "2024-09-05T12:48:20Z"
     labels:
       app.kubernetes.io/managed-by: kustomize
       app.kubernetes.io/name: argofin
     name: argofin-metrics-reader
-    resourceVersion: "3342"
+    resourceVersion: "524"
     uid: 558fd862-b167-47a9-afb7-ab2db618d7a3
   rules:
   - nonResourceURLs:
@@ -200,13 +200,13 @@ items:
   metadata:
     annotations:
       kubectl.kubernetes.io/last-applied-configuration: |
-        {"apiVersion":"rbac.authorization.k8s.io/v1","kind":"ClusterRole","metadata":{"annotations":{},"creationTimestamp":"2024-09-05T12:48:20Z","labels":{"app.kubernetes.io/managed-by":"kustomize","app.kubernetes.io/name":"argofin"},"name":"argofin-proxy-role","resourceVersion":"525","uid":"efac498b-5979-462b-9bdb-d46550e2a068"},"rules":[{"apiGroups":["authentication.k8s.io"],"resources":["tokenreviews"],"verbs":["create"]},{"apiGroups":["authorization.k8s.io"],"resources":["subjectaccessreviews"],"verbs":["create"]}]}
+        {"apiVersion":"rbac.authorization.k8s.io/v1","kind":"ClusterRole","metadata":{"annotations":{},"labels":{"app.kubernetes.io/managed-by":"kustomize","app.kubernetes.io/name":"argofin"},"name":"argofin-proxy-role"},"rules":[{"apiGroups":["authentication.k8s.io"],"resources":["tokenreviews"],"verbs":["create"]},{"apiGroups":["authorization.k8s.io"],"resources":["subjectaccessreviews"],"verbs":["create"]}]}
     creationTimestamp: "2024-09-05T12:48:20Z"
     labels:
       app.kubernetes.io/managed-by: kustomize
       app.kubernetes.io/name: argofin
     name: argofin-proxy-role
-    resourceVersion: "3343"
+    resourceVersion: "525"
     uid: efac498b-5979-462b-9bdb-d46550e2a068
   rules:
   - apiGroups:
@@ -226,14 +226,14 @@ items:
   metadata:
     annotations:
       kubectl.kubernetes.io/last-applied-configuration: |
-        {"apiVersion":"rbac.authorization.k8s.io/v1","kind":"RoleBinding","metadata":{"annotations":{},"creationTimestamp":"2024-09-05T12:48:20Z","labels":{"app.kubernetes.io/managed-by":"kustomize","app.kubernetes.io/name":"argofin"},"name":"argofin-leader-election-rolebinding","namespace":"argofin-system","resourceVersion":"526","uid":"d8812173-e0ec-4241-8c7d-f1dada6dd84e"},"roleRef":{"apiGroup":"rbac.authorization.k8s.io","kind":"Role","name":"argofin-leader-election-role"},"subjects":[{"kind":"ServiceAccount","name":"argofin-controller-manager","namespace":"argofin-system"}]}
+        {"apiVersion":"rbac.authorization.k8s.io/v1","kind":"RoleBinding","metadata":{"annotations":{},"labels":{"app.kubernetes.io/managed-by":"kustomize","app.kubernetes.io/name":"argofin"},"name":"argofin-leader-election-rolebinding","namespace":"argofin-system"},"roleRef":{"apiGroup":"rbac.authorization.k8s.io","kind":"Role","name":"argofin-leader-election-role"},"subjects":[{"kind":"ServiceAccount","name":"argofin-controller-manager","namespace":"argofin-system"}]}
     creationTimestamp: "2024-09-05T12:48:20Z"
     labels:
       app.kubernetes.io/managed-by: kustomize
       app.kubernetes.io/name: argofin
     name: argofin-leader-election-rolebinding
     namespace: argofin-system
-    resourceVersion: "3344"
+    resourceVersion: "526"
     uid: d8812173-e0ec-4241-8c7d-f1dada6dd84e
   roleRef:
     apiGroup: rbac.authorization.k8s.io
@@ -248,13 +248,13 @@ items:
   metadata:
     annotations:
       kubectl.kubernetes.io/last-applied-configuration: |
-        {"apiVersion":"rbac.authorization.k8s.io/v1","kind":"ClusterRoleBinding","metadata":{"annotations":{},"creationTimestamp":"2024-09-05T12:48:21Z","labels":{"app.kubernetes.io/managed-by":"kustomize","app.kubernetes.io/name":"argofin"},"name":"argofin-manager-rolebinding","resourceVersion":"527","uid":"5c0265e7-62c7-4df6-84a2-335007ecbc09"},"roleRef":{"apiGroup":"rbac.authorization.k8s.io","kind":"ClusterRole","name":"argofin-manager-role"},"subjects":[{"kind":"ServiceAccount","name":"argofin-controller-manager","namespace":"argofin-system"}]}
+        {"apiVersion":"rbac.authorization.k8s.io/v1","kind":"ClusterRoleBinding","metadata":{"annotations":{},"labels":{"app.kubernetes.io/managed-by":"kustomize","app.kubernetes.io/name":"argofin"},"name":"argofin-manager-rolebinding"},"roleRef":{"apiGroup":"rbac.authorization.k8s.io","kind":"ClusterRole","name":"argofin-manager-role"},"subjects":[{"kind":"ServiceAccount","name":"argofin-controller-manager","namespace":"argofin-system"}]}
     creationTimestamp: "2024-09-05T12:48:21Z"
     labels:
       app.kubernetes.io/managed-by: kustomize
       app.kubernetes.io/name: argofin
     name: argofin-manager-rolebinding
-    resourceVersion: "3345"
+    resourceVersion: "527"
     uid: 5c0265e7-62c7-4df6-84a2-335007ecbc09
   roleRef:
     apiGroup: rbac.authorization.k8s.io
@@ -269,13 +269,13 @@ items:
   metadata:
     annotations:
       kubectl.kubernetes.io/last-applied-configuration: |
-        {"apiVersion":"rbac.authorization.k8s.io/v1","kind":"ClusterRoleBinding","metadata":{"annotations":{},"creationTimestamp":"2024-09-05T12:48:21Z","labels":{"app.kubernetes.io/managed-by":"kustomize","app.kubernetes.io/name":"argofin"},"name":"argofin-proxy-rolebinding","resourceVersion":"528","uid":"0535ea8f-1a13-4399-b39d-31fecb10b533"},"roleRef":{"apiGroup":"rbac.authorization.k8s.io","kind":"ClusterRole","name":"argofin-proxy-role"},"subjects":[{"kind":"ServiceAccount","name":"argofin-controller-manager","namespace":"argofin-system"}]}
+        {"apiVersion":"rbac.authorization.k8s.io/v1","kind":"ClusterRoleBinding","metadata":{"annotations":{},"labels":{"app.kubernetes.io/managed-by":"kustomize","app.kubernetes.io/name":"argofin"},"name":"argofin-proxy-rolebinding"},"roleRef":{"apiGroup":"rbac.authorization.k8s.io","kind":"ClusterRole","name":"argofin-proxy-role"},"subjects":[{"kind":"ServiceAccount","name":"argofin-controller-manager","namespace":"argofin-system"}]}
     creationTimestamp: "2024-09-05T12:48:21Z"
     labels:
       app.kubernetes.io/managed-by: kustomize
       app.kubernetes.io/name: argofin
     name: argofin-proxy-rolebinding
-    resourceVersion: "3346"
+    resourceVersion: "528"
     uid: 0535ea8f-1a13-4399-b39d-31fecb10b533
   roleRef:
     apiGroup: rbac.authorization.k8s.io
@@ -290,7 +290,7 @@ items:
   metadata:
     annotations:
       kubectl.kubernetes.io/last-applied-configuration: |
-        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"creationTimestamp":"2024-09-05T12:48:21Z","labels":{"app.kubernetes.io/managed-by":"kustomize","app.kubernetes.io/name":"argofin","control-plane":"controller-manager"},"name":"argofin-controller-manager-metrics-service","namespace":"argofin-system","resourceVersion":"530","uid":"6edfc673-d09d-4113-a8e7-3f2c61ebed5d"},"spec":{"clusterIP":"10.43.126.241","clusterIPs":["10.43.126.241"],"internalTrafficPolicy":"Cluster","ipFamilies":["IPv4"],"ipFamilyPolicy":"SingleStack","ports":[{"name":"https","port":8443,"protocol":"TCP","targetPort":"https"}],"selector":{"control-plane":"controller-manager"},"sessionAffinity":"None","type":"ClusterIP"},"status":{"loadBalancer":{}}}
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"labels":{"app.kubernetes.io/managed-by":"kustomize","app.kubernetes.io/name":"argofin","control-plane":"controller-manager"},"name":"argofin-controller-manager-metrics-service","namespace":"argofin-system"},"spec":{"ports":[{"name":"https","port":8443,"protocol":"TCP","targetPort":"https"}],"selector":{"control-plane":"controller-manager"}}}
     creationTimestamp: "2024-09-05T12:48:21Z"
     labels:
       app.kubernetes.io/managed-by: kustomize
@@ -298,7 +298,7 @@ items:
       control-plane: controller-manager
     name: argofin-controller-manager-metrics-service
     namespace: argofin-system
-    resourceVersion: "3347"
+    resourceVersion: "530"
     uid: 6edfc673-d09d-4113-a8e7-3f2c61ebed5d
   spec:
     clusterIP: 10.43.126.241
@@ -325,16 +325,16 @@ items:
     annotations:
       deployment.kubernetes.io/revision: "1"
       kubectl.kubernetes.io/last-applied-configuration: |
-        {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{"deployment.kubernetes.io/revision":"1"},"creationTimestamp":"2024-09-05T12:48:21Z","generation":1,"labels":{"app.kubernetes.io/managed-by":"kustomize","app.kubernetes.io/name":"argofin","control-plane":"controller-manager"},"name":"argofin-controller-manager","namespace":"argofin-system","resourceVersion":"576","uid":"d475887a-dca2-47f7-8b50-3fce7bae16e0"},"spec":{"progressDeadlineSeconds":600,"replicas":1,"revisionHistoryLimit":10,"selector":{"matchLabels":{"control-plane":"controller-manager"}},"strategy":{"rollingUpdate":{"maxSurge":"25%","maxUnavailable":"25%"},"type":"RollingUpdate"},"template":{"metadata":{"annotations":{"kubectl.kubernetes.io/default-container":"manager"},"creationTimestamp":null,"labels":{"control-plane":"controller-manager"}},"spec":{"containers":[{"args":["--secure-listen-address=0.0.0.0:8443","--upstream=http://127.0.0.1:8080/","--logtostderr=true","--v=0"],"image":"gcr.io/kubebuilder/kube-rbac-proxy:v0.16.0","imagePullPolicy":"IfNotPresent","name":"kube-rbac-proxy","ports":[{"containerPort":8443,"name":"https","protocol":"TCP"}],"resources":{"limits":{"cpu":"500m","memory":"128Mi"},"requests":{"cpu":"5m","memory":"64Mi"}},"securityContext":{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]}},"terminationMessagePath":"/dev/termination-log","terminationMessagePolicy":"File"},{"args":["--health-probe-bind-address=:8081","--metrics-bind-address=127.0.0.1:8080","--leader-elect"],"command":["/manager"],"image":"k3d-registry:5000/memcached-operator:v0.0.3","imagePullPolicy":"IfNotPresent","livenessProbe":{"failureThreshold":3,"httpGet":{"path":"/healthz","port":8081,"scheme":"HTTP"},"initialDelaySeconds":15,"periodSeconds":20,"successThreshold":1,"timeoutSeconds":1},"name":"manager","readinessProbe":{"failureThreshold":3,"httpGet":{"path":"/readyz","port":8081,"scheme":"HTTP"},"initialDelaySeconds":5,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":1},"resources":{"limits":{"cpu":"500m","memory":"128Mi"},"requests":{"cpu":"10m","memory":"64Mi"}},"securityContext":{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]}},"terminationMessagePath":"/dev/termination-log","terminationMessagePolicy":"File"}],"dnsPolicy":"ClusterFirst","restartPolicy":"Always","schedulerName":"default-scheduler","securityContext":{"runAsNonRoot":true},"serviceAccount":"argofin-controller-manager","serviceAccountName":"argofin-controller-manager","terminationGracePeriodSeconds":10}}},"status":{"availableReplicas":1,"conditions":[{"lastTransitionTime":"2024-09-05T12:48:51Z","lastUpdateTime":"2024-09-05T12:48:51Z","message":"Deployment has minimum availability.","reason":"MinimumReplicasAvailable","status":"True","type":"Available"},{"lastTransitionTime":"2024-09-05T12:48:21Z","lastUpdateTime":"2024-09-05T12:48:51Z","message":"ReplicaSet \"argofin-controller-manager-78f4d784cd\" has successfully progressed.","reason":"NewReplicaSetAvailable","status":"True","type":"Progressing"}],"observedGeneration":1,"readyReplicas":1,"replicas":1,"updatedReplicas":1}}
+        {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"labels":{"app.kubernetes.io/managed-by":"kustomize","app.kubernetes.io/name":"argofin","control-plane":"controller-manager"},"name":"argofin-controller-manager","namespace":"argofin-system"},"spec":{"replicas":1,"selector":{"matchLabels":{"control-plane":"controller-manager"}},"template":{"metadata":{"annotations":{"kubectl.kubernetes.io/default-container":"manager"},"labels":{"control-plane":"controller-manager"}},"spec":{"containers":[{"args":["--secure-listen-address=0.0.0.0:8443","--upstream=http://127.0.0.1:8080/","--logtostderr=true","--v=0"],"image":"gcr.io/kubebuilder/kube-rbac-proxy:v0.16.0","name":"kube-rbac-proxy","ports":[{"containerPort":8443,"name":"https","protocol":"TCP"}],"resources":{"limits":{"cpu":"500m","memory":"128Mi"},"requests":{"cpu":"5m","memory":"64Mi"}},"securityContext":{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]}}},{"args":["--health-probe-bind-address=:8081","--metrics-bind-address=127.0.0.1:8080","--leader-elect"],"command":["/manager"],"image":"k3d-registry:5000/memcached-operator:v0.0.3","livenessProbe":{"httpGet":{"path":"/healthz","port":8081},"initialDelaySeconds":15,"periodSeconds":20},"name":"manager","readinessProbe":{"httpGet":{"path":"/readyz","port":8081},"initialDelaySeconds":5,"periodSeconds":10},"resources":{"limits":{"cpu":"500m","memory":"128Mi"},"requests":{"cpu":"10m","memory":"64Mi"}},"securityContext":{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]}}}],"securityContext":{"runAsNonRoot":true},"serviceAccountName":"argofin-controller-manager","terminationGracePeriodSeconds":10}}}}
     creationTimestamp: "2024-09-05T12:48:21Z"
-    generation: 2
+    generation: 1
     labels:
       app.kubernetes.io/managed-by: kustomize
       app.kubernetes.io/name: argofin
       control-plane: controller-manager
     name: argofin-controller-manager
     namespace: argofin-system
-    resourceVersion: "10107"
+    resourceVersion: "576"
     uid: d475887a-dca2-47f7-8b50-3fce7bae16e0
   spec:
     progressDeadlineSeconds: 600
@@ -437,6 +437,12 @@ items:
   status:
     availableReplicas: 1
     conditions:
+    - lastTransitionTime: "2024-09-05T12:48:51Z"
+      lastUpdateTime: "2024-09-05T12:48:51Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
     - lastTransitionTime: "2024-09-05T12:48:21Z"
       lastUpdateTime: "2024-09-05T12:48:51Z"
       message: ReplicaSet "argofin-controller-manager-78f4d784cd" has successfully
@@ -444,13 +450,7 @@ items:
       reason: NewReplicaSetAvailable
       status: "True"
       type: Progressing
-    - lastTransitionTime: "2024-09-06T08:16:03Z"
-      lastUpdateTime: "2024-09-06T08:16:03Z"
-      message: Deployment has minimum availability.
-      reason: MinimumReplicasAvailable
-      status: "True"
-      type: Available
-    observedGeneration: 2
+    observedGeneration: 1
     readyReplicas: 1
     replicas: 1
     updatedReplicas: 1

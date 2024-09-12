@@ -21,12 +21,15 @@ import (
 	"fmt"
 
 	argocd "github.com/argoproj/argo-cd/v2/pkg/apis/application/v1alpha1"
+	corev1 "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/client-go/tools/record"
+	"sigs.k8s.io/controller-runtime/pkg/handler"
 
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 )
 
@@ -37,7 +40,10 @@ type CleanerReconciler struct {
 	Recorder record.EventRecorder
 }
 
-const openreplayFinalizer = "openreplay.com/finalizer"
+const (
+	openreplayFinalizer        = "openreplay.com/finalizer"
+	openreplayClusterFinalizer = "openreplay.com/cluster"
+)
 
 // Definitions to manage status conditions
 const (
@@ -47,67 +53,17 @@ const (
 	typeDegradedMemcached = "Degraded"
 )
 
-// finalizeMemcached will perform the required operations before delete the CR.
-func (r *CleanerReconciler) doFinalizerOperationsForMemcached(cr *argocd.Application) {
-	// TODO(user): Add the cleanup steps that the operator
-	// needs to do before the CR can be deleted. Examples
-	// of finalizers include performing backups and deleting
-	// resources that are not owned by this CR, like a PVC.
-
-	// Note: It is not recommended to use finalizers with the purpose of deleting resources which are
-	// created and managed in the reconciliation. These ones, such as the Deployment created on this reconcile,
-	// are defined as dependent of the custom resource. See that we use the method ctrl.SetControllerReference.
-	// to set the ownerRef which means that the Deployment will be deleted by the Kubernetes API.
-	// More info: https://kubernetes.io/docs/tasks/administer-cluster/use-cascading-deletion/
-	fmt.Println("Successfully deleted Memcached")
-
-	apps := &argocd.ApplicationList{}
-	if err := r.Client.List(context.TODO(), apps, client.MatchingLabels{"domain": "rjsh.com"}); err != nil {
-		r.Recorder.Event(cr, "Warning", "ListError",
-			fmt.Sprintf("Failed to list Argo Applications: %v", err))
-		return
+func (r *CleanerReconciler) handleFinalizerOperations(ctx context.Context, obj client.Object) error {
+	obj.SetFinalizers([]string{})
+	if err := r.Update(ctx, obj); err != nil {
+		return err
 	}
-
-	// Remove finalizers from each application
-	for _, app := range apps.Items {
-		fmt.Println(app.Name)
-		if len(app.GetFinalizers()) > 0 {
-			app.SetFinalizers([]string{})
-			if err := r.Client.Update(context.TODO(), &app); err != nil {
-				fmt.Printf("Failed to remove finalizer from Argo Application %s: %v", app.Name, err)
-				continue
-			}
-		}
-	}
-
-	// List Argo ApplicationSets with label domain=rjsh.com
-	appSets := &argocd.ApplicationSetList{}
-	if err := r.Client.List(context.TODO(), appSets, client.MatchingLabels{"domain": "rjsh.com"}); err != nil {
-		fmt.Printf("Failed to list Argo ApplicationSets: %v", err)
-		return
-	}
-
-	// Remove finalizers from each ApplicationSet
-	for _, appSet := range appSets.Items {
-		if len(appSet.GetFinalizers()) > 0 {
-			appSet.SetFinalizers([]string{})
-			if err := r.Client.Update(context.TODO(), &appSet); err != nil {
-				fmt.Printf("Failed to remove finalizer from Argo ApplicationSet %s: %v", appSet.Name, err)
-				continue
-			}
-		}
-	}
-
-	// // The following implementation will raise an event
-	// r.Recorder.Event(cr, "Warning", "Deleting",
-	// 	fmt.Sprintf("Custom Resource %s is being deleted from the namespace %s",
-	// 		cr.Name,
-	// 		cr.Namespace))
+	return nil
 }
 
-//+kubebuilder:rbac:groups=argoproj.io,resources=applications,verbs=get;list;watch;create;update;patch;delete
-//+kubebuilder:rbac:groups=argoproj.io,resources=applications/status,verbs=get;update;patch
-//+kubebuilder:rbac:groups=argoproj.io,resources=applications/finalizers,verbs=update
+//+kubebuilder:rbac:groups=corev1;argoproj.io,resources=secrets;applications,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups=corev1;argoproj.io,resources=secrets/status;applications/status,verbs=get;update;patch
+//+kubebuilder:rbac:groups=corev1;argoproj.io,resources=secrets/finalizers;applications/finalizers,verbs=update
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
@@ -120,85 +76,59 @@ func (r *CleanerReconciler) doFinalizerOperationsForMemcached(cr *argocd.Applica
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.17.3/pkg/reconcile
 func (r *CleanerReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	log := log.FromContext(ctx)
-	argocdApp := &argocd.Application{}
-	err := r.Get(ctx, req.NamespacedName, argocdApp)
-	if err != nil {
-		if apierrors.IsNotFound(err) {
-			// If the custom resource is not found then it usually means that it was deleted or not created
-			// In this way, we will stop the reconciliation
-			log.Info("argocd resource not found. Ignoring since object must be deleted")
+	// argocdApp := &argocd.Application{}
+
+	// Fetch the object
+	objectType := "Unknown"
+	isObjectMarkedToBeDeleted := false
+	argoApp := &argocd.Application{}
+	secret := &corev1.Secret{}
+	var object client.Object
+
+	// Attempt to fetch the object as a Secret
+	if err := r.Get(ctx, req.NamespacedName, secret); err == nil {
+		// If it's a Secret, set obj to secret and continue
+		fmt.Println("Got Secret")
+		objectType = "secret"
+		object = secret
+	} else {
+		// Attempt to fetch the object as an ArgoCD Application
+		if err := r.Get(ctx, req.NamespacedName, argoApp); err == nil {
+			// If it's an Application, set obj to application and continue
+			fmt.Println("Got ArgoApp")
+			objectType = "application"
+			object = argoApp
+		} else {
+			// If neither, log the error and return
+			fmt.Println(err, "unable to fetch object")
+			if !apierrors.IsNotFound(err) {
+				return ctrl.Result{}, err
+			}
 			return ctrl.Result{}, nil
 		}
-		// Error reading the object - requeue the request.
-		log.Error(err, "Failed to get argocd")
-		return ctrl.Result{}, err
 	}
-
-	isMemcachedMarkedToBeDeleted := argocdApp.GetDeletionTimestamp() != nil
-	// TODO(user): your logic here
-	// Let's add a finalizer. Then, we can define some operations which should
-	// occur before the custom resource is deleted.
-	// More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/finalizers
-	// if !controllerutil.ContainsFinalizer(argocdApp, openreplayFinalizer) && !isMemcachedMarkedToBeDeleted {
-	// 	if ok := controllerutil.AddFinalizer(argocdApp, openreplayFinalizer); !ok {
-	// 		log.Error(err, "Failed to add finalizer into the custom resource")
-	// 		return ctrl.Result{Requeue: true}, nil
-	// 	}
-	//
-	// 	if err = r.Update(ctx, argocdApp); err != nil {
-	// 		log.Error(err, "Failed to update custom resource to add finalizer")
-	// 		return ctrl.Result{}, err
-	// 	}
-	// }
-
-	// Check if the Memcached instance is marked to be deleted, which is
-	// indicated by the deletion timestamp being set.
-	if isMemcachedMarkedToBeDeleted {
-		log.Info("Deleting.")
-		// Delete all regardless of finalizer
-		// if controllerutil.ContainsFinalizer(argocdApp, openreplayFinalizer) {
-		log.Info("Performing Finalizer Operations for Memcached before delete CR")
-
-		// if err := r.Status().Update(ctx, argocdApp); err != nil {
-		// 	log.Error(err, "Failed to update Memcached status")
-		// 	return ctrl.Result{}, err
-		// }
-
-		// Perform all operations required before removing the finalizer and allow
-		// the Kubernetes API to remove the custom resource.
-		// r.doFinalizerOperationsForMemcached(argocdApp)
-
-		// TODO(user): If you add operations to the doFinalizerOperationsForMemcached method
-		// then you need to ensure that all worked fine before deleting and updating the Downgrade status
-		// otherwise, you should requeue here.
-
-		// Re-fetch the memcached Custom Resource before updating the status
-		// so that we have the latest state of the resource on the cluster and we will avoid
-		// raising the error "the object has been modified, please apply
-		// your changes to the latest version and try again" which would re-trigger the reconciliation
-		if err := r.Get(ctx, req.NamespacedName, argocdApp); err != nil {
-			log.Error(err, "Failed to re-fetch memcached")
-			return ctrl.Result{}, err
+	// Determine the type of object and handle accordingly
+	switch objectType {
+	case "secret":
+		// It's a Secret
+		fmt.Printf("Secret created or updated: %s/%s\n", secret.Namespace, secret.Name)
+		objectType = "Secret"
+		isObjectMarkedToBeDeleted = secret.GetDeletionTimestamp() != nil
+		fmt.Println(isObjectMarkedToBeDeleted, secret.Name)
+		if controllerutil.ContainsFinalizer(secret, openreplayClusterFinalizer) && isObjectMarkedToBeDeleted {
+			log.Info("Deleting")
+			r.handleFinalizerOperations(ctx, object)
 		}
-
-		// if err := r.Status().Update(ctx, argocdApp); err != nil {
-		// 	log.Error(err, "Failed to update Memcached status")
-		// 	return ctrl.Result{}, err
-		// }
-		//
-		log.Info("Removing Finalizer for Argo after successfully perform the operations")
-		argocdApp.SetFinalizers([]string{})
-		// if err := r.Client.Update(context.TODO(), argocdApp); err != nil {
-		// 	fmt.Printf("Failed to remove finalizer from Argo ApplicationSet %s: %v", argocdApp.Name, err)
-		// 	return ctrl.Result{Requeue: true}, nil
-		// }
-
-		if err := r.Update(ctx, argocdApp); err != nil {
-			log.Error(err, "Failed to remove finalizer for Memcached")
-			return ctrl.Result{}, err
+	case "application":
+		// It's an ArgoCD Application
+		fmt.Printf("ArgoCD Application created or updated: %s/%s\n", argoApp.Namespace, argoApp.Name)
+		objectType = "Application"
+		isObjectMarkedToBeDeleted = argoApp.GetDeletionTimestamp() != nil
+		if isObjectMarkedToBeDeleted {
+			return ctrl.Result{}, r.handleFinalizerOperations(ctx, object)
 		}
-		// }
-		return ctrl.Result{}, nil
+	default:
+		log.Info("Unhandled object type")
 	}
 
 	return ctrl.Result{}, nil
@@ -208,5 +138,8 @@ func (r *CleanerReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 func (r *CleanerReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&argocd.Application{}).
+		Watches(
+			&corev1.Secret{},
+			&handler.EnqueueRequestForObject{}).
 		Complete(r)
 }

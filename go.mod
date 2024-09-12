@@ -8,6 +8,7 @@ require (
 	github.com/argoproj/argo-cd/v2 v2.12.2
 	github.com/onsi/ginkgo/v2 v2.14.0
 	github.com/onsi/gomega v1.30.0
+	k8s.io/api v0.29.6
 	k8s.io/apimachinery v0.29.6
 	k8s.io/client-go v0.29.6
 	sigs.k8s.io/controller-runtime v0.17.3
@@ -137,7 +138,6 @@ require (
 	gopkg.in/warnings.v0 v0.1.2 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	k8s.io/api v0.29.6 // indirect
 	k8s.io/apiextensions-apiserver v0.29.6 // indirect
 	k8s.io/apiserver v0.29.6 // indirect
 	k8s.io/cli-runtime v0.29.6 // indirect

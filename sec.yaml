@@ -1,0 +1,14 @@
+# https://kubernetes.io/docs/concepts/configuration/secret/
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mysecret
+  namespace: argocd
+  finalizers:
+  - openreplay.com/cluster
+  labels:
+    name: rajesh
+    openreplay.com/ownerOf: "Cluster"
+type: Opaque
+data:
+---
