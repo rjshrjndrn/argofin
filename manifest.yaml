@@ -96,8 +96,10 @@ items:
   rules:
   - apiGroups:
     - argoproj.io
+    - ""
     resources:
     - applications
+    - secrets
     verbs:
     - create
     - delete
@@ -108,8 +110,10 @@ items:
     - watch
   - apiGroups:
     - argoproj.io
+    - ""
     resources:
     - applications/status
+    - secrets/status
     verbs:
     - get
 - apiVersion: rbac.authorization.k8s.io/v1
@@ -128,16 +132,20 @@ items:
   rules:
   - apiGroups:
     - argoproj.io
+    - ""
     resources:
     - applications
+    - secrets
     verbs:
     - get
     - list
     - watch
   - apiGroups:
     - argoproj.io
+    - ""
     resources:
     - applications/status
+    - secrets/status
     verbs:
     - get
 - apiVersion: rbac.authorization.k8s.io/v1
@@ -153,8 +161,10 @@ items:
   rules:
   - apiGroups:
     - argoproj.io
+    - ""
     resources:
     - applications
+    - secrets
     verbs:
     - create
     - delete
@@ -165,14 +175,18 @@ items:
     - watch
   - apiGroups:
     - argoproj.io
+    - ""
     resources:
     - applications/finalizers
+    - secrets
     verbs:
     - update
   - apiGroups:
     - argoproj.io
+    - ""
     resources:
     - applications/status
+    - secrets/status
     verbs:
     - get
     - patch
@@ -334,7 +348,7 @@ items:
       control-plane: controller-manager
     name: argofin-controller-manager
     namespace: argofin-system
-    resourceVersion: "10107"
+    resourceVersion: "46883"
     uid: d475887a-dca2-47f7-8b50-3fce7bae16e0
   spec:
     progressDeadlineSeconds: 600
@@ -389,7 +403,7 @@ items:
           - --leader-elect
           command:
           - /manager
-          image: k3d-registry:5000/memcached-operator:v0.0.3
+          image: rjshrjndrn/openreplay-finalizer:v0.0.4
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 3
@@ -444,8 +458,8 @@ items:
       reason: NewReplicaSetAvailable
       status: "True"
       type: Progressing
-    - lastTransitionTime: "2024-09-06T08:16:03Z"
-      lastUpdateTime: "2024-09-06T08:16:03Z"
+    - lastTransitionTime: "2024-09-17T12:36:51Z"
+      lastUpdateTime: "2024-09-17T12:36:51Z"
       message: Deployment has minimum availability.
       reason: MinimumReplicasAvailable
       status: "True"
