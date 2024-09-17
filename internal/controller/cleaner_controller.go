@@ -36,13 +36,15 @@ import (
 // CleanerReconciler reconciles a Cleaner object
 type CleanerReconciler struct {
 	client.Client
-	Scheme   *runtime.Scheme
-	Recorder record.EventRecorder
+	Scheme     *runtime.Scheme
+	Recorder   record.EventRecorder
+	LabelValue map[string]string
 }
 
 const (
 	openreplayFinalizer        = "openreplay.com/finalizer"
 	openreplayClusterFinalizer = "openreplay.com/cluster"
+	namespace                  = "argocd"
 )
 
 // Definitions to manage status conditions
@@ -53,9 +55,81 @@ const (
 	typeDegradedMemcached = "Degraded"
 )
 
+func (r *CleanerReconciler) DeleteResourcesWithDomainLabel(ctx context.Context) error {
+	log := log.FromContext(ctx)
+	labelSelector := client.MatchingLabels(r.LabelValue)
+
+	// Delete Secrets with the label in the 'argocd' namespace
+	secretList := &corev1.SecretList{}
+	if err := r.List(ctx, secretList, client.InNamespace(namespace), labelSelector); err != nil {
+		log.Error(err, "Failed to list Secrets with label 'domain'")
+		return err
+	}
+
+	for _, secret := range secretList.Items {
+		log.Info("Deleting Secret", "Name", secret.Name, "Namespace", secret.Namespace)
+		if err := r.Delete(ctx, &secret); err != nil {
+			log.Error(err, "Failed to delete Secret", "Name", secret.Name)
+		} else {
+			log.Info("Secret deleted", "Name", secret.Name)
+		}
+	}
+
+	// Delete ArgoCD Applications with the label in the 'argocd' namespace
+	argoAppList := &argocd.ApplicationList{}
+	if err := r.List(ctx, argoAppList, client.InNamespace(namespace), labelSelector); err != nil {
+		log.Error(err, "Failed to list ArgoCD Applications with label 'domain'")
+		return err
+	}
+
+	for _, argoApp := range argoAppList.Items {
+		log.Info("Deleting ArgoCD Application", "Name", argoApp.Name, "Namespace", argoApp.Namespace)
+		if err := r.Delete(ctx, &argoApp); err != nil {
+			log.Error(err, "Failed to delete ArgoCD Application", "Name", argoApp.Name)
+		} else {
+			log.Info("ArgoCD Application deleted", "Name", argoApp.Name)
+		}
+	}
+
+	// Delete ApplicationSets with the label in the 'argocd' namespace
+	appSetList := &argocd.ApplicationSetList{}
+	if err := r.List(ctx, appSetList, client.InNamespace(namespace), labelSelector); err != nil {
+		log.Error(err, "Failed to list ApplicationSets with label 'domain'")
+		return err
+	}
+
+	for _, appSet := range appSetList.Items {
+		log.Info("Deleting ApplicationSet", "Name", appSet.Name, "Namespace", appSet.Namespace)
+		if err := r.Delete(ctx, &appSet); err != nil {
+			log.Error(err, "Failed to delete ApplicationSet", "Name", appSet.Name)
+		} else {
+			log.Info("ApplicationSet deleted", "Name", appSet.Name)
+		}
+	}
+
+	return nil
+}
+
+func getLabelValueForDomain(obj client.Object) (string, error) {
+	labels := obj.GetLabels()
+
+	// Check if the "domain" label exists
+	if domainValue, exists := labels["domain"]; exists {
+		return domainValue, nil
+	}
+
+	return "", fmt.Errorf("label 'domain' not found on object: %s/%s", obj.GetNamespace(), obj.GetName())
+}
+
 func (r *CleanerReconciler) handleFinalizerOperations(ctx context.Context, obj client.Object) error {
+	fmt.Println("Deleting related application and applicationSet")
+	if err := r.DeleteResourcesWithDomainLabel(ctx); err != nil {
+		fmt.Println("Failed to delete resources with domain label")
+		return err
+	}
 	obj.SetFinalizers([]string{})
 	if err := r.Update(ctx, obj); err != nil {
+		fmt.Println("Failed to update object with finalizer")
 		return err
 	}
 	return nil
@@ -129,6 +203,15 @@ func (r *CleanerReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 		}
 	default:
 		log.Info("Unhandled object type")
+		return ctrl.Result{}, fmt.Errorf("unhandled object type %v", objectType)
+	}
+	if r.LabelValue == nil {
+		labels := object.GetLabels()
+		// Check if the "domain" label exists
+		if domainValue, exists := labels["domain"]; exists {
+			r.LabelValue = make(map[string]string)
+			r.LabelValue["domain"] = domainValue
+		}
 	}
 
 	return ctrl.Result{}, nil
