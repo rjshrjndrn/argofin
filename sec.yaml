@@ -8,6 +8,7 @@ metadata:
   - openreplay.com/cluster
   labels:
     name: rajesh
+    domain: rajesh.com
     openreplay.com/ownerOf: "Cluster"
 type: Opaque
 data:
