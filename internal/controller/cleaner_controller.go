@@ -135,9 +135,9 @@ func (r *CleanerReconciler) handleFinalizerOperations(ctx context.Context, obj c
 	return nil
 }
 
-//+kubebuilder:rbac:groups=corev1;argoproj.io,resources=secrets;applications,verbs=get;list;watch;create;update;patch;delete
-//+kubebuilder:rbac:groups=corev1;argoproj.io,resources=secrets/status;applications/status,verbs=get;update;patch
-//+kubebuilder:rbac:groups=corev1;argoproj.io,resources=secrets/finalizers;applications/finalizers,verbs=update
+//+kubebuilder:rbac:groups="";argoproj.io,resources=secrets;applications;applicationsets,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups="";argoproj.io,resources=secrets/status;applicationsets/status;applications/status,verbs=get;update;patch
+//+kubebuilder:rbac:groups="";argoproj.io,resources=secrets/finalizers;applicationsets/finalizers;applications/finalizers,verbs=update
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.

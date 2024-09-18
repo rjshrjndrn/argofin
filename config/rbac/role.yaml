@@ -5,10 +5,11 @@ metadata:
   name: manager-role
 rules:
 - apiGroups:
+  - ""
   - argoproj.io
-  - corev1
   resources:
   - applications
+  - applicationsets
   - secrets
   verbs:
   - create
@@ -19,18 +20,20 @@ rules:
   - update
   - watch
 - apiGroups:
+  - ""
   - argoproj.io
-  - corev1
   resources:
   - applications/finalizers
+  - applicationsets/finalizers
   - secrets/finalizers
   verbs:
   - update
 - apiGroups:
+  - ""
   - argoproj.io
-  - corev1
   resources:
   - applications/status
+  - applicationsets/status
   - secrets/status
   verbs:
   - get

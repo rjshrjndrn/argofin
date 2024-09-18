@@ -9,9 +9,10 @@ metadata:
 rules:
 - apiGroups:
   - argoproj.io
-  - corev1
+  - ""
   resources:
   - applications
+  - applicationsets
   - secrets
   verbs:
   - create
@@ -23,7 +24,10 @@ rules:
   - watch
 - apiGroups:
   - argoproj.io
+  - ""
   resources:
   - applications/status
+  - applicationsets/status
+  - secrets/status
   verbs:
   - get
